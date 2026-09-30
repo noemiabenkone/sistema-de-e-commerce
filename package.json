@@ -1,0 +1,12 @@
+{
+  "name": "sistema-de-e-commerce",
+  "version": "1.0.0",
+  "description": "API backend para gerenciamento de um sistema de e-commerce",
+  "license": "ISC",
+  "author": "noemia",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
