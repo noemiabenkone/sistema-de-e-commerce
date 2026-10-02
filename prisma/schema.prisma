@@ -33,6 +33,12 @@ enum TipoDesconto {
   VALOR_FIXO
 }
 
+enum StatusDevolucao {
+  SOLICITADA
+  APROVADA
+  RECUSADA
+}
+
 model Usuario {
   id             Int      @id @default(autoincrement())
   nome           String
@@ -64,6 +70,7 @@ model Produto {
   nome           String
   descricao      String
   preco          Decimal
+  ativo          Boolean        @default(true)
 
   itensCarrinho  ItemCarrinho[]
   itensPedidos   ItemPedido[]
@@ -112,9 +119,10 @@ model Pedido {
   itensPedidos    ItemPedido[]
   pagamentos      Pagamento[]
   frete           Frete?
-  descontos       Desconto[]
+  descontos       DescontoPedido[]
   devolucao       Devolucao?
-  enderecoEntrega EnderecoPedido
+  enderecoEntrega EnderecoPedido?
+  avaliacoes      Avaliacao[]
 }
 
 model ItemPedido {
@@ -149,8 +157,8 @@ model Endereco {
   bairro         String
   cidade         String
   estado         String
-  cep            String
-  padrao         Boolean
+  cep             String
+  padrao         Boolean   @default(false)
 
   clienteId      Int
   cliente        Cliente   @relation(fields: [clienteId], references: [id])
@@ -165,7 +173,7 @@ model EnderecoPedido {
   bairro         String
   cidade         String
   estado         String
-  cep            String
+  cep             String
 
   pedidoId       Int       @unique
   pedido         Pedido    @relation(fields: [pedidoId], references: [id])
@@ -188,19 +196,31 @@ model Desconto {
   dataFim     DateTime
   status      Boolean
 
-  pedidos     Pedido[]
   produtos    Produto[]
+  pedidos     DescontoPedido[]
+}
+
+model DescontoPedido {
+  id             Int            @id @default(autoincrement())
+  tipo           TipoDesconto
+  valorAplicado  Decimal
+
+  pedidoId       Int
+  pedido         Pedido         @relation(fields: [pedidoId], references: [id])
+
+  descontoId     Int?
+  desconto       Desconto?      @relation(fields: [descontoId], references: [id])
 }
 
 model Devolucao {
-  id              Int       @id @default(autoincrement())
+  id              Int              @id @default(autoincrement())
   descricao       String
   valor           Decimal
-  status          Boolean
+  status          StatusDevolucao
   dataSolicitacao DateTime
 
-  pedidoId        Int       @unique
-  pedido          Pedido    @relation(fields: [pedidoId], references: [id])
+  pedidoId        Int              @unique
+  pedido          Pedido           @relation(fields: [pedidoId], references: [id])
 }
 
 model Avaliacao {
@@ -212,6 +232,11 @@ model Avaliacao {
   clienteId   Int
   cliente     Cliente   @relation(fields: [clienteId], references: [id])
 
+  pedidoId    Int
+  pedido      Pedido    @relation(fields: [pedidoId], references: [id])
+
   produtoId   Int
   produto     Produto   @relation(fields: [produtoId], references: [id])
+
+  @@unique([pedidoId, produtoId])
 }
