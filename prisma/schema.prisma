@@ -11,9 +11,207 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum StatusPedido {
+  PENDENTE
+  PAGO
+  EM_PREPARACAO
+  ENVIADO
+  ENTREGUE
+  CANCELADO
+  DEVOLUCAO
+}
+
+enum StatusPagamento {
+  PENDENTE
+  APROVADO
+  RECUSADO
+}
+
+enum TipoDesconto {
+  PERCENTUAL
+  VALOR_FIXO
+}
+
+model Usuario {
+  id             Int      @id @default(autoincrement())
+  nome           String
+  sobrenome      String
+  email          String   @unique
+  senha          String
+  cpf            String   @unique
+  dataNascimento DateTime @db.Date
+}
+
+model Cliente {
+  id             Int      @id @default(autoincrement())
+  nome           String
+  sobrenome      String
+  email          String   @unique
+  senha          String
+  cpf            String   @unique
+  dataNascimento DateTime @db.Date
+  celular        String
+
+  carrinho       Carrinho?
+  pedidos        Pedido[]
+  enderecos      Endereco[]
+  avaliacoes     Avaliacao[]
+}
+
 model Produto {
-  id        Int    @id @default(autoincrement())
-  nome      String
-  descricao String
-  preco     Float
+  id             Int            @id @default(autoincrement())
+  nome           String
+  descricao      String
+  preco          Decimal
+
+  itensCarrinho  ItemCarrinho[]
+  itensPedidos   ItemPedido[]
+  estoque        Estoque?
+  descontos      Desconto[]
+  avaliacoes     Avaliacao[]
+}
+
+model Estoque {
+  id          Int      @id @default(autoincrement())
+  quantidade  Int
+
+  produtoId   Int      @unique
+  produto     Produto  @relation(fields: [produtoId], references: [id])
+}
+
+model Carrinho {
+  id            Int            @id @default(autoincrement())
+
+  clienteId     Int            @unique
+  cliente       Cliente        @relation(fields: [clienteId], references: [id])
+
+  itens         ItemCarrinho[]
+}
+
+model ItemCarrinho {
+  id          Int       @id @default(autoincrement())
+  quantidade  Int
+
+  carrinhoId  Int
+  carrinho    Carrinho  @relation(fields: [carrinhoId], references: [id])
+
+  produtoId   Int
+  produto     Produto   @relation(fields: [produtoId], references: [id])
+}
+
+model Pedido {
+  id              Int              @id @default(autoincrement())
+  data            DateTime
+  status          StatusPedido
+  valorTotal      Decimal
+
+  clienteId       Int
+  cliente         Cliente          @relation(fields: [clienteId], references: [id])
+
+  itensPedidos    ItemPedido[]
+  pagamentos      Pagamento[]
+  frete           Frete?
+  descontos       Desconto[]
+  devolucao       Devolucao?
+  enderecoEntrega EnderecoPedido
+}
+
+model ItemPedido {
+  id          Int       @id @default(autoincrement())
+  quantidade  Int
+  preco       Decimal
+
+  pedidoId    Int
+  pedido      Pedido    @relation(fields: [pedidoId], references: [id])
+
+  produtoId   Int
+  produto     Produto   @relation(fields: [produtoId], references: [id])
+}
+
+model Pagamento {
+  id             Int              @id @default(autoincrement())
+  metodo         String
+  valor          Decimal
+  status         StatusPagamento
+  dataPagamento  DateTime
+
+  pedidoId       Int
+  pedido         Pedido           @relation(fields: [pedidoId], references: [id])
+}
+
+model Endereco {
+  id             Int       @id @default(autoincrement())
+  tipoLogradouro String
+  nomeLogradouro String
+  numero         Int
+  complemento    String
+  bairro         String
+  cidade         String
+  estado         String
+  cep            String
+  padrao         Boolean
+
+  clienteId      Int
+  cliente        Cliente   @relation(fields: [clienteId], references: [id])
+}
+
+model EnderecoPedido {
+  id             Int       @id @default(autoincrement())
+  tipoLogradouro String
+  nomeLogradouro String
+  numero         Int
+  complemento    String
+  bairro         String
+  cidade         String
+  estado         String
+  cep            String
+
+  pedidoId       Int       @unique
+  pedido         Pedido    @relation(fields: [pedidoId], references: [id])
+}
+
+model Frete {
+  id           Int       @id @default(autoincrement())
+  valor        Decimal
+  prazoEntrega String
+
+  pedidoId     Int       @unique
+  pedido       Pedido    @relation(fields: [pedidoId], references: [id])
+}
+
+model Desconto {
+  id          Int            @id @default(autoincrement())
+  tipo        TipoDesconto
+  valor       Decimal
+  dataInicio  DateTime
+  dataFim     DateTime
+  status      Boolean
+
+  pedidos     Pedido[]
+  produtos    Produto[]
+}
+
+model Devolucao {
+  id              Int       @id @default(autoincrement())
+  descricao       String
+  valor           Decimal
+  status          Boolean
+  dataSolicitacao DateTime
+
+  pedidoId        Int       @unique
+  pedido          Pedido    @relation(fields: [pedidoId], references: [id])
+}
+
+model Avaliacao {
+  id          Int       @id @default(autoincrement())
+  mensagem    String
+  nota        Int
+  data        DateTime
+
+  clienteId   Int
+  cliente     Cliente   @relation(fields: [clienteId], references: [id])
+
+  produtoId   Int
+  produto     Produto   @relation(fields: [produtoId], references: [id])
 }

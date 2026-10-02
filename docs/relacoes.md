@@ -16,7 +16,7 @@ Um carrinho pode possuir vários itens, e cada item pertence a um único carrinh
 
 Produto 1 ItemCarrinho
 
-Um produto pode aparecer em vários carrinhos, e cada item do carrinho representa um único produto.
+Um produto pode estar associado a vários itens de carrinho, e cada item de carrinho representa um único produto.
 
 4. Cliente → Pedido
 
