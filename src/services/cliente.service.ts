@@ -10,7 +10,7 @@ const pool = new Pool({
 const adapter = new PrismaPg(pool);
 export const prisma = new PrismaClient({ adapter });
 
-export default async function criarClient(nome: string, sobrenome: string, email: string, cpf: string, dataNascimento: string, celular: string, senha: string) {
+export default async function criarCliente(nome: string, sobrenome: string, email: string, cpf: string, dataNascimento: string, celular: string, senha: string) {
     const clienteExistente = await prisma.cliente.findUnique({
         where:{
             email: email
@@ -39,6 +39,6 @@ export default async function criarClient(nome: string, sobrenome: string, email
             senha: senhaHash,
         }
     })
-
-    return cliente;
+    
+   return { cliente };
 }

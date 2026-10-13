@@ -1,5 +1,9 @@
 import {prisma} from "../lib/prisma.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
+
+
 export default async function loginCliente(email: string, senha: string) {
     const cliente = await prisma.cliente.findUnique({
         where: {
@@ -13,5 +17,10 @@ export default async function loginCliente(email: string, senha: string) {
     if (!senhaValida) {
     throw new Error("Email ou senha inválidos");
 }
-    return cliente; 
+const token = jwt.sign(
+        { clienteId: cliente.id },
+           process.env.JWT_SECRET!,
+       { expiresIn: "1h" }
+   );
+    return { cliente, token }; 
 }
