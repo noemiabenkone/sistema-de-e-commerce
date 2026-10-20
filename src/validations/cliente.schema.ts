@@ -9,3 +9,5 @@ export const clienteSchema = zod.object({
     dataNascimento: zod.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     celular: zod.string().regex(/^\d{10,11}$/),
 });
+
+export const atualizarClienteSchema = clienteSchema.partial();
