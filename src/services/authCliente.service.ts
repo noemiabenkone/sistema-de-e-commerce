@@ -17,10 +17,6 @@ export default async function loginCliente(email: string, senha: string) {
     if (!senhaValida) {
     throw new Error("Email ou senha inválidos");
 }
-const token = jwt.sign(
-        { clienteId: cliente.id },
-           process.env.JWT_SECRET!,
-       { expiresIn: "1h" }
-   );
+const token = jwt.sign({ clienteId: cliente.id },process.env.JWT_SECRET!,{ expiresIn: "1h" });
     return { cliente, token }; 
 }

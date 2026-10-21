@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { clienteSchema } from "../validations/cliente.schema.js";
 import criarClienteService from "../services/cliente.service.js";
-import loginClienteService from "../services/auth.service.js";
+import loginClienteService from "../services/authCliente.service.js";
 import { atualizarClienteSchema } from "../validations/cliente.schema.js";
 import { atualizarCliente as atualizarClienteService } from "../services/cliente.service.js";
 import { deletarCliente as deletarClienteService } from "../services/cliente.service.js";

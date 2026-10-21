@@ -8,3 +8,4 @@ export const usuarioSchema = zod.object({
     cpf: zod.string().regex(/^\d{11}$/),
     dataNascimento: zod.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
+export const atualizarUsuarioSchema = usuarioSchema.partial();

@@ -35,7 +35,7 @@ export default async function criarCliente(dados: DadosCliente) {
     });
 
     if (clienteExistente) {
-        throw new Error("Cliente já cadastrado");
+        throw new AppError("Cliente já cadastrado", 400);
     }
 
     const cpfExistente = await prisma.cliente.findUnique({
@@ -45,7 +45,7 @@ export default async function criarCliente(dados: DadosCliente) {
     });
 
     if (cpfExistente) {
-        throw new Error("CPF já cadastrado");
+        throw new AppError("CPF já cadastrado", 400);
     }
 
     const senhaHash = await bcrypt.hash(dados.senha, 10);

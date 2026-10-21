@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import authMiddleware from "../middlewares/auth.middleware.js";
+import authClienteMiddleware from "../middlewares/authCliente.middleware.js";
 import {
     atualizarCliente,
     buscarMeuPerfil,
@@ -13,13 +13,13 @@ const router = Router();
 
 router.post("/clientes", criarCliente);
 
-router.post("/login", loginCliente);
+router.post("/clientes/login",loginCliente);
 
-router.get("/clientes/perfil", authMiddleware, buscarMeuPerfil);
+router.get("/clientes/perfil", authClienteMiddleware, buscarMeuPerfil);
 
-router.put("/clientes/", authMiddleware, atualizarCliente);
+router.put("/clientes/", authClienteMiddleware, atualizarCliente);
 
 
-router.delete("/clientes/", authMiddleware, deletarCliente);
+router.delete("/clientes/", authClienteMiddleware, deletarCliente);
 
 export default router;
