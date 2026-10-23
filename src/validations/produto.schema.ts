@@ -6,3 +6,4 @@ export const produtoSchema = zod.object({
     preco: zod.number().nonnegative(),
     ativo: zod.boolean().default(true),
 });
+export const atualizacaoProdutoSchema = produtoSchema.partial();
