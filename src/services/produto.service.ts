@@ -85,3 +85,16 @@ export async function atualizarProduto(
     return produtoAtualizado;
 }
 
+export async function deletarProduto(id: number) {
+    const produtoExistente = await prisma.produto.findUnique({
+        where: {id}, 
+    })
+    if(!produtoExistente) {
+        throw new AppError("produto nao encontrado", 400)
+    }
+    
+    const produto = await prisma.produto.delete({
+        where: {id}
+    })
+    return produto
+} 

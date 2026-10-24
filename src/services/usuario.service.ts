@@ -165,3 +165,4 @@ const usuario = await prisma.usuario.delete({
 
     return { usuario };
 }
+
