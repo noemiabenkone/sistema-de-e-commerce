@@ -5,6 +5,7 @@ declare global {
             clienteId?: number;
             produtoId?: number;
             usuarioId?: number;
+
         }
     }
 }
