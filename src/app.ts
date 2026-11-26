@@ -5,6 +5,8 @@ import errorMiddleware from "./middlewares/error.middleware.js";
 import usuarioRoutes from "./routes/usuario.routes.js";
 import produtoRoutes from "./routes/produto.routes.js"
 import estoqueRoutes from "./routes/estoque.routes.js"
+import pedidoRoutes from "./routes/pedido.routes.js";
+import carrinhoRoutes from "./routes/carrinho.routes.js";
 
 const app = express();
 
@@ -17,6 +19,9 @@ app.use(usuarioRoutes);
 app.use(produtoRoutes);
 
 app.use(estoqueRoutes);
+
+app.use(pedidoRoutes);
+app.use(carrinhoRoutes);
 
 app.use(errorMiddleware);
 

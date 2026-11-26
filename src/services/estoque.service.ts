@@ -1,4 +1,4 @@
-
+import "dotenv/config";
 import type { z } from "zod";
 import { estoqueSchema, ProdAtualizadosSchema} from "../validations/estoque.schema.js";
 import { AppError } from "../errors/AppError.js";
